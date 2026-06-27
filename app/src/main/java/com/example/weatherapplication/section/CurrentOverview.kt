@@ -3,7 +3,6 @@ package com.example.weatherapplication.section
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -15,15 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapplication.R
+import com.example.weatherapplication.dataclasses.ForecastResponse
+import kotlin.math.roundToInt
 
 
-@Preview
 @Composable
-fun CurrentOverview(){
+fun CurrentOverview(forecast: ForecastResponse?) {
+    val item = forecast?.list?.firstOrNull()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,8 +47,13 @@ fun CurrentOverview(){
                 .size(100.dp)
                 .padding(top = 18.dp)
         )
+        val tempText = if (item != null) {
+        (item.main.temp - 273.15).roundToInt().toString()
+    } else {
+        "Loading"
+    }
         Text(
-            text = "32°",
+            text = tempText,
             fontSize = 30.sp,
             color = Color.White,
             modifier = Modifier

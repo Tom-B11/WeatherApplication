@@ -4,27 +4,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.weatherapplication.Forecast
-import com.example.weatherapplication.components.ForecastCard
+import com.example.weatherapplication.dataclasses.Forecast
+import com.example.weatherapplication.components.ForecastOverviewCard
+import com.example.weatherapplication.dataclasses.ForecastResponse
 
-@Preview(showBackground = true)
 @Composable
-fun FutureOverview(){
-
-    val forecasts = listOf(
-        Forecast("Mon 29th", "32","19"),
-        Forecast("Tue 30th", "29", "17"),
-        Forecast("Wed 1st", "25","12"),
-        Forecast("Mon 29th", "32","19"),
-        Forecast("Tue 30th", "29","17"),
-        Forecast("Wed 1st", "25","12"),
-
-        )
+fun FutureOverview(forecasts: ForecastResponse?) {
 
     LazyRow(
         modifier = Modifier
@@ -35,13 +23,37 @@ fun FutureOverview(){
 
     )
     {
-        items(forecasts) { forecast ->
+        val groupedByDay = forecasts?.list?.groupBy { it.dt_txt.split(" ")[0] }
 
-            ForecastCard(
-                day = forecast.day,
-                highTemp = forecast.highTemp,
-                lowTemp = forecast.lowTemp
+
+        groupedByDay?.forEach { (date, forecastList) ->
+            val tempC = forecastList.map{
+                it.main.temp - 273.15
+            }
+            val high = tempC.maxOrNull()?.toInt() ?: 0
+            val low = tempC.minOrNull()?.toInt() ?: 0
+            val date = date.split("-")[2].toInt()
+            item{
+            ForecastOverviewCard(
+                day =date.toOrdinal(),
+                highTemp = high,
+                lowTemp = low
+
+
             )
+                }
         }
     }
+        }
+
+fun Int.toOrdinal(): String{
+    return when{
+        this in 11..13 -> "${this}th"
+        this % 10 == 1 -> "${this}st"
+        this % 10 == 2 -> "${this}nd"
+        this % 10 == 3 -> "${this}rd"
+        else -> "${this}th"
+    }
 }
+
+

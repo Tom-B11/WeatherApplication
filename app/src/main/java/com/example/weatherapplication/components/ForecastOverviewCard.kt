@@ -14,19 +14,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapplication.R
 
+
 @Composable
-@Preview(showBackground = true)
-fun ForecastCard(day: String = "Mon 28th", highTemp: String = "32", lowTemp: String = "19"){
+fun ForecastOverviewCard(day: String = "Mon 28th", highTemp: Int, lowTemp: Int){
 
     Card(
         modifier = Modifier

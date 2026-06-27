@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -10,6 +12,25 @@ android {
     }
 
     defaultConfig {
+
+        val localProperties = Properties()
+        val localFile = rootProject.file("local.properties")
+
+        if (localFile.exists()) {
+            localProperties.load(localFile.inputStream())
+        }
+
+        val apiKey = localProperties.getProperty("API_KEY") ?: ""
+
+
+        buildConfigField(
+            "String",
+            "WEATHER_API_KEY",
+            "\"$apiKey\""
+        )
+
+
+
         applicationId = "com.example.weatherapplication"
         minSdk = 24
         targetSdk = 36
@@ -32,10 +53,14 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+
+    //noinspection UseTomlInstead
+    implementation("com.google.code.gson:gson:2.14.0")
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

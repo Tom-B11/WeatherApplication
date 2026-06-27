@@ -10,15 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.weatherapplication.dataclasses.ForecastResponse
 import com.example.weatherapplication.section.CurrentOverview
 import com.example.weatherapplication.section.DayOverview
 import com.example.weatherapplication.section.FutureOverview
 
-@Preview(showBackground = true)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(forecast: ForecastResponse?) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -33,13 +33,12 @@ fun HomeScreen() {
                 )
             )
     ) {
+
         Spacer(modifier = Modifier.height(32.dp))
-        CurrentOverview()
+        CurrentOverview(forecast)
         Spacer(modifier = Modifier.height(32.dp))
-        FutureOverview()
+        FutureOverview(forecast)
         Spacer(modifier = Modifier.height(8.dp))
-        DayOverview()
+        DayOverview(forecast)
     }
 }
-
-
