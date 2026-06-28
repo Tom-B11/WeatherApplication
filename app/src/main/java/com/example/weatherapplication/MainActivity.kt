@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         println("API KEY = '${BuildConfig.WEATHER_API_KEY}'")
         val key = BuildConfig.WEATHER_API_KEY
          Thread{
-            val url = URL("https://api.openweathermap.org/data/2.5/forecast?lat=65.947171&lon=-18.181440&appid=$key")
+            val url = URL("https://api.openweathermap.org/data/2.5/forecast?lat=51.195900&lon=0.274970&appid=$key")
             val connection = url.openConnection() as HttpsURLConnection
              println("START REQUEST")
              println(connection.responseCode)

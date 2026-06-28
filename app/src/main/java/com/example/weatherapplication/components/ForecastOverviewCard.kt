@@ -2,10 +2,12 @@ package com.example.weatherapplication.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,32 +28,38 @@ import com.example.weatherapplication.R
 
 
 @Composable
-fun ForecastOverviewCard(day: String = "Mon 28th", highTemp: Int, lowTemp: Int){
-
+fun ForecastOverviewCard(dateString: String, highTemp: Int, lowTemp: Int, isSelected: Boolean, onClick:()-> Unit){
+    val dayNumber = dateString.substringAfterLast("-").toInt()
+    val label = dayNumber.toOrdinal()
     Card(
         modifier = Modifier
             .height(160.dp)
             .width(120.dp)
             .padding(top = 12.dp)
-            .padding(end = 12.dp),
+            .padding(end = 12.dp)
+            .clickable{onClick()}
+            .offset(y = if (isSelected) (-6).dp else 0.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xD9D9D9D9)
+            if (isSelected) Color(0xffB0BEC5) else Color(0xffD9D9D9)
+
         ),
         shape = RoundedCornerShape(22.dp),
-        elevation = CardDefaults.cardElevation(10.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (isSelected) 10.dp else 2.dp
+        )
 
 
     ) {    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xD9D9D9D9)),
+            .fillMaxSize(),
+
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
 
 
     ) {
         Text(
-            text = day,
+            text = label,
             fontSize = 20.sp,
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -76,4 +84,13 @@ fun ForecastOverviewCard(day: String = "Mon 28th", highTemp: Int, lowTemp: Int){
         )
     } }
 
+}
+fun Int.toOrdinal(): String{
+    return when{
+        this in 11..13 -> "${this}th"
+        this % 10 == 1 -> "${this}st"
+        this % 10 == 2 -> "${this}nd"
+        this % 10 == 3 -> "${this}rd"
+        else -> "${this}th"
+    }
 }

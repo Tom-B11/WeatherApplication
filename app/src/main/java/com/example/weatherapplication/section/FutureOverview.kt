@@ -4,56 +4,61 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.weatherapplication.dataclasses.Forecast
 import com.example.weatherapplication.components.ForecastOverviewCard
 import com.example.weatherapplication.dataclasses.ForecastResponse
 
+
+
 @Composable
-fun FutureOverview(forecasts: ForecastResponse?) {
+fun FutureOverview(
+    forecasts: ForecastResponse?,
+    selectedDate: String?,
+    onDateSelected: (String) -> Unit
+) {
+
+    val groupedByDay = forecasts?.list
+        ?.groupBy { it.dt_txt.split(" ")[0] }
+        ?.toSortedMap()
+        ?: return
+
+    val dayList = groupedByDay.toList()
 
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
         contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
 
+        items(dayList) { (dateString, forecastList) ->
 
-    )
-    {
-        val groupedByDay = forecasts?.list?.groupBy { it.dt_txt.split(" ")[0] }
+            val isSelected = dateString == selectedDate
 
-
-        groupedByDay?.forEach { (date, forecastList) ->
-            val tempC = forecastList.map{
+            val temps = forecastList.map {
                 it.main.temp - 273.15
             }
-            val high = tempC.maxOrNull()?.toInt() ?: 0
-            val low = tempC.minOrNull()?.toInt() ?: 0
-            val date = date.split("-")[2].toInt()
-            item{
+
+            val high = temps.maxOrNull()?.toInt() ?: 0
+            val low = temps.minOrNull()?.toInt() ?: 0
+
+            val dayNumber = dateString.substringAfterLast("-").toInt()
+
             ForecastOverviewCard(
-                day =date.toOrdinal(),
+                dateString = dateString,
                 highTemp = high,
-                lowTemp = low
-
-
-            )
+                lowTemp = low,
+                isSelected = isSelected,
+                onClick = {onDateSelected(dateString)
                 }
+            )
         }
-    }
-        }
-
-fun Int.toOrdinal(): String{
-    return when{
-        this in 11..13 -> "${this}th"
-        this % 10 == 1 -> "${this}st"
-        this % 10 == 2 -> "${this}nd"
-        this % 10 == 3 -> "${this}rd"
-        else -> "${this}th"
     }
 }
-
-

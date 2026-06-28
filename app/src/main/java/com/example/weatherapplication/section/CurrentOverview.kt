@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,6 +50,7 @@ fun CurrentOverview(forecast: ForecastResponse?) {
                 .padding(top = 18.dp)
         )
         val tempText = if (item != null) {
+            println("CURRENT TEMP ${item.main.temp}")
         (item.main.temp - 273.15).roundToInt().toString()
     } else {
         "Loading"
